@@ -45,6 +45,28 @@ workflows:
       - name: 5. Ubah Nama Aplikasi & Beri Izin Internet
         script: |
           cd my_app
+          # Menggunakan perl agar berjalan lancar di mesin Mac
+          perl -pi -e 's/android:label="app"/android:label="Kommunitas"/g' android/app/src/main/AndroidManifest.xml
+          perl -pi -e 's/<application/<uses-permission android:name="android.permission.INTERNET"\/>\n    <application/g' android/app/src/main/AndroidManifest.xml
+
+      - name: 6. Build (Compile) jadi APK
+        script: |
+          cd my_app
+          flutter build apk --release
+          
+    artifacts:
+      - my_app/build/app/outputs/flutter-apk/app-release.apk
+            android_12:
+              image: "logo.png"
+              color: "#121212"
+          EOF
+          
+          dart run flutter_launcher_icons
+          dart run flutter_native_splash:create
+
+      - name: 5. Ubah Nama Aplikasi & Beri Izin Internet
+        script: |
+          cd my_app
           sed -i 's/android:label="app"/android:label="Kommunitas"/g' android/app/src/main/AndroidManifest.xml
           sed -i '/<application/i \    <uses-permission android:name="android.permission.INTERNET" />' android/app/src/main/AndroidManifest.xml
 
