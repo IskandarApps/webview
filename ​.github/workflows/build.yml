@@ -1,0 +1,48 @@
+name: Build Flutter APK Otomatis
+
+on:
+  push:
+    branches: [ main ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Ambil File dari Repository
+        uses: actions/checkout@v4
+
+      - name: Siapkan Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'zulu'
+          java-version: '17'
+
+      - name: Siapkan Mesin Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          channel: 'stable'
+
+      - name: Generate Struktur Project Flutter
+        run: flutter create aplikasi_ku
+
+      - name: Suntikkan main.dart Anda ke dalam Project
+        run: cp main.dart aplikasi_ku/lib/main.dart
+
+      - name: Install Package Webview
+        run: |
+          cd aplikasi_ku
+          flutter pub add webview_flutter
+
+      - name: Buka Izin Akses Internet Android
+        run: sed -i '/<application/i \    <uses-permission android:name="android.permission.INTERNET" />' aplikasi_ku/android/app/src/main/AndroidManifest.xml
+
+      - name: Build / Compile jadi APK
+        run: |
+          cd aplikasi_ku
+          flutter build apk --release
+
+      - name: Upload APK agar bisa di-download
+        uses: actions/upload-artifact@v4
+        with:
+          name: File-APK-Aplikasi
+          path: aplikasi_ku/build/app/outputs/flutter-apk/app-release.apk
