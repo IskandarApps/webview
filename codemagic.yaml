@@ -1,11 +1,8 @@
-workflows:
-  android-build:
-    name: Build APK
-    instance_type: mac_mini_m1
-    environment:
-      flutter: stable
-    scripts:
-      - name: S1 Generate Project
+pile APK
+        script: cd my_app && flutter build apk --release
+    artifacts:
+      - my_app/build/app/outputs/flutter-apk/app-release.apk
+flutternamenamee: S1 Generate Project
         script: flutter create --org com.kommunitas --project-name app my_app
       - name: S2 Copy Code and Logo
         script: cp main.dart my_app/lib/main.dart && cd my_app && wget -O logo.png "https://kommunitas.web.id/logo.png"
